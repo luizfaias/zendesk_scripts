@@ -2,7 +2,7 @@ require 'zendesk_api'
 require 'net/http'
 require 'commander/import'
 
-program :version, '0.2'
+program :version, '0.3'
 program :description, 'This script allows you to create dummy tickets inside your Zendesk test account'
 program :help, 'Author', 'Luiz Faias <lfaias@zendesk.com>'
 default_command :run
@@ -40,7 +40,15 @@ command :run do |c|
       resp = Net::HTTP.get_response(URI.parse('http://jaspervdj.be/lorem-markdownum/markdown-html.html?num-blocks=3'))
       description = resp.body
 
-      ticket = client.tickets.create(:subject => subject, :comment => { :value => description })
+      ticket_form_id = 43072
+
+      tags = ["ordertype_cc", "ordertype_cnr", "ordertype_oos", "ordertype_bo"]
+      random_tag = tags.sample
+
+      requesters = [730536112, 733847002, 742123101, 742126781, 772578782, 772924972]
+      random_requester = requesters.sample
+
+      ticket = client.tickets.create(:subject => subject, :comment => { :value => description }, :ticket_form_id => ticket_form_id, :requester_id => random_requester, :tags => random_tag)
       p ticket.url
     end
   end
