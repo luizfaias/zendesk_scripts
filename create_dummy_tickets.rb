@@ -2,7 +2,7 @@ require 'zendesk_api'
 require 'net/http'
 require 'commander/import'
 
-program :version, '0.4'
+program :version, '0.5'
 program :description, 'This script allows you to create dummy tickets inside your Zendesk test account'
 program :help, 'Author', 'Luiz Faias <lfaias@zendesk.com>'
 default_command :run
@@ -18,12 +18,12 @@ command :run do |c|
     say "\n"
     say "Please enter your account details below:                        "
     say "\n\n"
-    url       = ask "URL (e.g https://{subdomain}.zendesk.com/api/v2): "
+    url       = ask "Subdomain: (e.g mycompany.zendesk.com): "
     email     = ask "Email (e.g admin@company.com): "
-    api_token = ask ("API Token: ") { |q| q.echo = "*" }
+    api_token = ask ("API Token (will not be displayed): ") { |q| q.echo = "*" }
 
     client = ZendeskAPI::Client.new do |config|
-      config.url = url
+      config.url = "https://#{url}/api/v2"
       config.username = email
       config.token = api_token
       config.retry = true
